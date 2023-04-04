@@ -1,6 +1,7 @@
 import rsa
 import os
 import signal
+
 # gera as chaves publica e privada na pasta keys
 def generateKeys():
     (publicKey, privateKey) = rsa.newkeys(512)
