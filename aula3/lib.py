@@ -1,6 +1,4 @@
-import rsa
-import os
-import signal
+import rsa, os, signal
 
 # gera as chaves publica e privada na pasta keys
 def generateKeys():

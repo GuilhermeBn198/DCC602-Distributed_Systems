@@ -1,5 +1,4 @@
-import socket
-import threading
+import socket, threading
 from lib import *
 
 HOST = 'localhost'

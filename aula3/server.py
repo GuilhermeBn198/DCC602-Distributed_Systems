@@ -1,6 +1,4 @@
-import socket
-import threading
-import keyboard
+import socket, threading, keyboard
 from lib import *
 
 HOST = ''
@@ -67,7 +65,6 @@ while True:
     # o servidor começa a aceitar conexões
     cliente_socket, endereco = servidor_socket.accept()
     
-    # quando uma nova conexão é realizada uma nova thread é iniciada com o intuito de receber
-    # as mensagens do cliente e as repassar para todos os outros
+    # quando uma nova conexão é realizada uma nova thread é iniciada com o intuito de receber as mensagens do cliente e as repassar para todos os outros
     thread_cliente = threading.Thread(target=lidar_com_cliente, args=(cliente_socket, endereco))
     thread_cliente.start()
