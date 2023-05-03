@@ -1,42 +1,30 @@
 import socket
 import threading
 
-def reverse_string(string):
-    return string[::-1]
 
-def handle_client(conn, addr, connections):
-    print(f"[NEW CONNECTION] {addr} connected.")
-    connections.append(conn)
+def handle_client(client_socket, addr):
+    print(f"Client {addr} connected.")
+    while True:
+        message = client_socket.recv(16384).decode("utf-8")
+        if not message:
+            break
+        inverted_message = message[::-1]
+        client_socket.sendall(inverted_message.encode("utf-8"))
+    print(f"Client {addr} disconnected.")
+    client_socket.close()
 
-    connected = True
-    while connected:
-        msg = conn.recv(1024)
-        if msg == b"quit":
-            connected = False
-        else:
-            reversed_msg = reverse_string(msg.decode())
-            print(f"[{addr}] {msg.decode()} => {reversed_msg}")
-            conn.sendall(reversed_msg.encode())
-
-    conn.close()
-    connections.remove(conn)
-    print(f"[DISCONNECTED] {addr} disconnected.")
 
 def start_server():
-    host = "localhost"
-    port = 12346
-
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind((host, port))
-
-    server.listen()
-    print(f"[LISTENING] Server is listening on {host}:{port}.")
-
-    connections = []
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(("0.0.0.0", 12344))
+    server_socket.listen(5)
+    print("Server listening on port 12344")
     while True:
-        conn, addr = server.accept()
-        thread = threading.Thread(target=handle_client, args=(conn, addr, connections))
+        client_socket, addr = server_socket.accept()
+        thread = threading.Thread(
+            target=handle_client, args=(client_socket, addr))
         thread.start()
-        print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")
 
-start_server()
+
+if __name__ == "__main__":
+    start_server()
