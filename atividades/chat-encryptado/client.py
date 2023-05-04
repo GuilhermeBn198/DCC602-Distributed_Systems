@@ -1,40 +1,76 @@
-import socket, threading
-from lib import *
+import socket
+import threading
+import base64
 
 HOST = 'localhost'
 PORT = 5000
 
-# carrega as chaves publica e privada
-privateKey, publicKey = loadKeys()
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-def receber_mensagens(cliente_socket):
+s.bind((HOST, PORT))
+
+s.listen()
+
+clients = []
+
+nicknames = []
+
+
+def broadcast(message):
+    for client in clients:
+        client.send(message)
+
+
+def handle(client):
     while True:
         try:
-            mensagem = cliente_socket.recv(1024)
-            # realiza a tradução da mensagem utilizando a chave privada carregada
-            mensagem_traduzida = rsa.decrypt(mensagem, privateKey).decode()
-            if(mensagem_traduzida == "disconnect"):
-                print("O servidor foi finalizado")
-                finalizar_programa()
+            index = clients.index(client)
+            nickname = nicknames[index]
 
-            print(mensagem_traduzida)
+            message = client.recv(2048)
+            decoded_message = nickname + ': ' + \
+                base64.b64decode(message).decode('ascii')
+            encoded_message = base64.b64encode(decoded_message.encode('ascii'))
+            broadcast(encoded_message)
         except:
+            index = clients.index(client)
+            clients.remove(client)
+            client.close()
+            nickname = nicknames[index]
+            message = f'{nickname} saiu do chat!'
+            print(message)
+            encoded_message = base64.b64encode(message.encode('ascii'))
+            broadcast(encoded_message)
+            nicknames.remove(nickname)
             break
 
-cliente_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-cliente_socket.connect((HOST, PORT))
 
-print("Conexão com o servidor iniciada")
-print("digite 'disconnect' para finalizar a conexão")
+def receive():
+    while True:
+        client, address = s.accept()
+        print(f'Conectado com {str(address)}')
 
-# inicia a thread de recebimento de mensagens
-thread_receber = threading.Thread(target=receber_mensagens, args=(cliente_socket,))
-thread_receber.start()
+        encoded_message = base64.b64encode(
+            'Como voce prefere ser identificado?'.encode('ascii'))
 
-while True:
-    mensagem = input().encode()
-    # realiza a criptografia da mensagem utilizando a chave publica carregada
-    mensagem_criptografada = rsa.encrypt(mensagem, publicKey)
-    cliente_socket.send(mensagem_criptografada)
-    # finaliza a conexão
-    if(mensagem.decode().lower() == "disconnect"): break
+        client.send(encoded_message)
+        nickname = base64.b64decode(client.recv(2048)).decode('ascii')
+
+        nicknames.append(nickname)
+        clients.append(client)
+
+        print(f'Nome do cliente eh {nickname}!')
+
+        encoded_message = base64.b64encode(
+            f'{nickname} entrou no chat!'.encode('ascii'))
+        broadcast(encoded_message)
+
+        encoded_message = base64.b64encode(
+            'Conectado ao servidor!'.encode('ascii'))
+        client.send(encoded_message)
+
+        thread = threading.Thread(target=handle, args=(client,))
+        thread.start()
+
+
+receive()
