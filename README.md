@@ -1,5 +1,6 @@
 # DCC602-Distributed_Systems
  Taught by: Leandro Balico
+ 
  Made by: Guilherme Lucas Pereira Bernardo
 ## para executar ambiente virtual python:
 	Python -m venv venv
