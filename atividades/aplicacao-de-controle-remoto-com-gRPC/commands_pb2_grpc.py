@@ -6,14 +6,15 @@ import commands_pb2 as commands__pb2
 
 
 class CommandServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """Classe stub para o serviço CommandService."""
 
     def __init__(self, channel):
-        """Constructor.
+        """Construtor.
 
         Args:
-            channel: A grpc.Channel.
+            channel: Um grpc.Channel.
         """
+        # Configura o método ExecuteCommand do serviço CommandService
         self.ExecuteCommand = channel.unary_unary(
                 '/command.CommandService/ExecuteCommand',
                 request_serializer=commands__pb2.CommandRequest.SerializeToString,
@@ -22,16 +23,18 @@ class CommandServiceStub(object):
 
 
 class CommandServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """Classe servicer para o serviço CommandService."""
 
     def ExecuteCommand(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Implementação do método ExecuteCommand."""
+        # Define o status de erro para o método não implementado
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
 def add_CommandServiceServicer_to_server(servicer, server):
+    # Define os handlers de método RPC para o serviço CommandService
     rpc_method_handlers = {
             'ExecuteCommand': grpc.unary_unary_rpc_method_handler(
                     servicer.ExecuteCommand,
@@ -39,14 +42,15 @@ def add_CommandServiceServicer_to_server(servicer, server):
                     response_serializer=commands__pb2.CommandResponse.SerializeToString,
             ),
     }
+    # Adiciona os handlers RPC genéricos ao servidor
     generic_handler = grpc.method_handlers_generic_handler(
             'command.CommandService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class CommandService(object):
-    """Missing associated documentation comment in .proto file."""
+    """Classe para o serviço CommandService."""
 
     @staticmethod
     def ExecuteCommand(request,
@@ -59,6 +63,7 @@ class CommandService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
+        # Executa uma chamada unary-unary para o serviço CommandService
         return grpc.experimental.unary_unary(request, target, '/command.CommandService/ExecuteCommand',
             commands__pb2.CommandRequest.SerializeToString,
             commands__pb2.CommandResponse.FromString,

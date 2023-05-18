@@ -2,14 +2,20 @@ syntax = "proto3";
 
 package command;
 
+// Definição do serviço CommandService
 service CommandService {
+  // Método RPC ExecuteCommand
   rpc ExecuteCommand (CommandRequest) returns (CommandResponse) {}
 }
 
+// Mensagem CommandRequest
 message CommandRequest {
+  // Campo para o comando a ser executado
   string command = 1;
 }
 
+// Mensagem CommandResponse
 message CommandResponse {
+  // Campo para o resultado da execução do comando
   string result = 1;
 }

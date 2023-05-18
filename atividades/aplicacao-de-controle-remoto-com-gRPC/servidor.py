@@ -11,6 +11,7 @@ class CommandService(commands_pb2_grpc.CommandServiceServicer):
         return commands_pb2.CommandResponse(result=result)
 
 def serve():
+    
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     commands_pb2_grpc.add_CommandServiceServicer_to_server(CommandService(), server)
     server.add_insecure_port('[::]:50051')
