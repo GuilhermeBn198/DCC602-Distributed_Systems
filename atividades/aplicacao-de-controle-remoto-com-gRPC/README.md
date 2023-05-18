@@ -31,3 +31,5 @@ python3 servidor.py
 python3 client.py
 
 ```
+
+## Passo 4: executar um comando no client. Ex: ls -a
