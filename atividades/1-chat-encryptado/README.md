@@ -12,4 +12,10 @@ Passo 2: Execute o cliente
 python3 client.py
 
 ```
-Passo 3: Interaja com o chat
+Passo 3: execute outro cliente
+
+```bash
+python3 client.py
+
+```
+Passo 4: interaja com o chat!

@@ -40,3 +40,5 @@ O cliente enviará repetidamente mensagens ao servidor de modo que cria diversas
 NA EXECUÇÃO DO ATAQUE DDOS, FOI CONCLUÍDO QUE O MESMO FOI EXECUTADO COM SUCESSO, CONSEGUINDO ATINGIR 100% DA CAPACIDADE DO PROCESSADOR 
 
 ![prova-ddos](/atividades/servidor-ddos/imgs/prova-ddos.png)
+
+Note que nessa imagem acima, estão sendo executados 10000 conexões ao mesmo tempo pelo cliente
